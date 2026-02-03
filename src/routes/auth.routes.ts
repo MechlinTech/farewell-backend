@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { AuthController } from '../controllers/auth.controller.js';
+import { authenticate } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -18,6 +20,7 @@ const router = Router();
  *               - firstName
  *               - lastName
  *               - email
+ *               - phone
  *               - password
  *             properties:
  *               firstName:
@@ -26,13 +29,67 @@ const router = Router();
  *                 type: string
  *               email:
  *                 type: string
+ *               phone:
+ *                 type: string
  *               password:
  *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [CUSTOMER, DRIVER, ADMIN]
  *     responses:
  *       201:
- *         description: User created
+ *         description: User created, OTP sent
  */
-router.post('/signup', () => {});
+router.post('/signup', AuthController.signup);
+
+/**
+ * @swagger
+ * /auth/verify-otp:
+ *   post:
+ *     summary: Verify OTP
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - code
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               code:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: OTP verified
+ */
+router.post('/verify-otp', AuthController.verifyOTP);
+
+/**
+ * @swagger
+ * /auth/resend-otp:
+ *   post:
+ *     summary: Resend OTP
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *             properties:
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: OTP resent
+ */
+router.post('/resend-otp', AuthController.resendOTP);
 
 /**
  * @swagger
@@ -56,8 +113,45 @@ router.post('/signup', () => {});
  *                 type: string
  *     responses:
  *       200:
- *         description: JWT token
+ *         description: JWT tokens
  */
-router.post('/login', () => {});
+router.post('/login', AuthController.login);
+
+/**
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: New access token
+ */
+router.post('/refresh', AuthController.refreshToken);
+
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Get current user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user details
+ */
+router.get('/me', authenticate, AuthController.me);
 
 export default router;
