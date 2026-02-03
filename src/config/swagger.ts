@@ -1,4 +1,7 @@
 import swaggerJSDoc from 'swagger-jsdoc';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const options: swaggerJSDoc.Options = {
   definition: {

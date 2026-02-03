@@ -5,28 +5,43 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  //url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(uuid())
-  firstName String
-  lastName  String?
-  email     String   @unique
-  passowrd  String
-  role      Role     @default(CUSTOMER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt   
+  id            String   @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String   @unique
+  phone         String
+  password      String
+  role          Role     @default(CUSTOMER)
+  isVerified    Boolean  @default(false)
+  accountStatus String   @default("ACTIVE") // ACTIVE | LOCKED
+  createdAt     DateTime @default(now())
+
+  otps Otp[]
 }
 
 enum Role {
   CUSTOMER
   DRIVER
   ADMIN
+}
+
+model Otp {
+  id          String    @id @default(uuid())
+  userId      String
+  code        String
+  expiresAt   DateTime
+  attempts    Int       @default(0)
+  resendCount Int       @default(0)
+  lockedUntil DateTime?
+  createdAt   DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
