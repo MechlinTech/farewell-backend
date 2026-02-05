@@ -15,16 +15,20 @@ datasource db {
 model User {
   id            String   @id @default(uuid())
   firstName     String
-  lastName      String
+  lastName      String?
   email         String   @unique
   phone         String
   password      String
-  role          Role     @default(CUSTOMER)
+  role          Role
   isVerified    Boolean  @default(false)
   accountStatus String   @default("ACTIVE") // ACTIVE | LOCKED
   createdAt     DateTime @default(now())
 
-  otps Otp[]
+  otps                  Otp[]
+  vehicles              VehicleDetail[]
+  rider                 Rider[]
+  instantDeliveryCart   instantDeliveryCart[]
+  scheduledDeliveryCart ScheduledDeliveryCart[]
 }
 
 enum Role {
@@ -44,4 +48,106 @@ model Otp {
   createdAt   DateTime  @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VehicleDetail {
+  id               String   @id @default(uuid())
+  userId           String
+  vehicleNumber    String   @unique
+  model            String
+  capacity         Int
+  license          String
+  vehicleRCNumber  String
+  vehicleInsurance String
+  createdAt        DateTime @default(now())
+
+  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rider Rider[]
+}
+
+model Rider {
+  id              String   @id @default(uuid())
+  userId          String
+  vehicleDetailId String
+  isVerified      Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  bankDetails     Boolean  @default(false)
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleDetail VehicleDetail @relation(fields: [vehicleDetailId], references: [id], onDelete: Cascade)
+}
+
+model instantDeliveryCart {
+  id         String @id @default(uuid())
+  customerId String
+
+  pickupLat  Float
+  pickupLng  Float
+  dropoffLat Float
+  dropoffLng Float
+
+  quantity  Int
+  size      Size
+  picture   String?
+  createdAt DateTime @default(now())
+
+  customer User @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([pickupLat, pickupLng])
+  @@index([dropoffLat, dropoffLng])
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+model ScheduledDeliveryCart {
+  id         String @id @default(uuid())
+  customerId String
+
+  pickupLat  Float
+  pickupLng  Float
+  dropoffLat Float
+  dropoffLng Float
+
+  quantity  Int
+  size      Size
+  picture   String?
+  date      DateTime
+  time      DateTime
+  createdAt DateTime @default(now())
+
+  customer User @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([pickupLat, pickupLng])
+  @@index([dropoffLat, dropoffLng])
+}
+
+model userLocation {
+  id          String   @id @default(uuid())
+  userId      String
+  locationLat Float
+  locationLng Float
+  createdAt   DateTime @default(now())
+
+  @@index([locationLat, locationLng])
+}
+
+model faq {
+  id        String   @id @default(uuid())
+  question  String   @unique
+  answer    String
+  category  Category
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+enum Category {
+  GENERAL
+  PAYMENT
+  CUSTOMER
+  RIDER
+  OTHER
 }
