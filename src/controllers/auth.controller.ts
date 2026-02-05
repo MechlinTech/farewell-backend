@@ -37,6 +37,13 @@ export class AuthController {
         });
         return;
       }
+      else if (password.length > 16) {
+        res.status(400).json({
+          success: false,
+          message: 'Password must be less than 16 characters long',
+        });
+        return;
+      }
 
       // Create user
       const user = await AuthService.signup({
