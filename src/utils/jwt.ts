@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 import type { SignOptions, VerifyOptions, JwtPayload } from 'jsonwebtoken';
+import { env } from '../config/env.js';
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string;
-const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN ?? '15m') as SignOptions['expiresIn'];
-const JWT_REFRESH_EXPIRES_IN = (process.env.JWT_REFRESH_EXPIRES_IN ?? '7d') as SignOptions['expiresIn'];
+const JWT_SECRET = env.jwt_secret as string;
+const JWT_REFRESH_SECRET = env.jwt_refresh_secret as string;
+const JWT_EXPIRES_IN = (env.jwt_expires_in ?? '15m') as SignOptions['expiresIn'];
+const JWT_REFRESH_EXPIRES_IN = (env.jwt_refresh_expires_in ?? '7d') as SignOptions['expiresIn'];
 
 export interface AppJwtPayload extends JwtPayload {
   id: string;
