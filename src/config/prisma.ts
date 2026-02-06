@@ -1,8 +1,9 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
+import { env } from "./env.js"
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = `${env.db_url}`;
 
 // Determine if SSL should be used based on connection string
 // For localhost, disable SSL; for cloud/production, enable it

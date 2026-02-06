@@ -29,6 +29,7 @@ model User {
   rider                 Rider[]
   instantDeliveryCart   instantDeliveryCart[]
   scheduledDeliveryCart ScheduledDeliveryCart[]
+  userLocation          userLocation[]
 }
 
 enum Role {
@@ -132,6 +133,7 @@ model userLocation {
   locationLng Float
   createdAt   DateTime @default(now())
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([locationLat, locationLng])
 }
 

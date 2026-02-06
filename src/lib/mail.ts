@@ -1,9 +1,8 @@
 import sgMail from '@sendgrid/mail';
-import dotenv from 'dotenv';
-dotenv.config();
+import { env } from '../config/env.js';
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM;
+const SENDGRID_API_KEY = env.sendgrid_api_key;
+const EMAIL_FROM = env.email_from;
 
 if (!SENDGRID_API_KEY) {
   throw new Error('SENDGRID_API_KEY is not defined in environment variables');
@@ -133,7 +132,6 @@ export const sendAccountLockedEmail = async (
     if (error.response) {
       console.error('SendGrid error:', error.response.body);
     }
-    // Don't throw error for notification emails
   }
 };
 

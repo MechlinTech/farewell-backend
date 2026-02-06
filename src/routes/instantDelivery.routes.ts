@@ -1,4 +1,3 @@
-// src/routes/instantDeliveryCart.routes.ts
 import { Router } from 'express';
 import { InstantDeliveryCartController } from '../controllers/instantDelivery.controller.js';
 import { authenticate } from '../middleware/auth.middleware.js';

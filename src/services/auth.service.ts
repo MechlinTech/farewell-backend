@@ -21,7 +21,21 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new Error('Email already registered');
+      // If user exists but not verified, delete the old record to allow re-signup
+      if (!existingUser.isVerified) {
+        // Delete associated OTPs first (cascade may not be configured)
+        await prisma.otp.deleteMany({
+          where: { userId: existingUser.id },
+        });
+        
+        // Delete the unverified user
+        await prisma.user.delete({
+          where: { id: existingUser.id },
+        });
+      } else {
+        // User is verified, cannot re-signup
+        throw new Error('Email already registered');
+      }
     }
 
     // Hash password

@@ -1,7 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { env } from './env.js';
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -13,8 +11,8 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-        url: `${process.env.SWAGGER_API_URL}`,
-        description: `${process.env.NODE_ENV}`
+        url: `${env.swagger_api_url}`,
+        description: `${env.node_env}`
       }
     ],
     components: {
