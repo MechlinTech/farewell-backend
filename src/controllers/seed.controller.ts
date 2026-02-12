@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { SeedService } from '../services/seed.service.js';
-import { Category } from '@prisma/client';
+import { FaqCategory } from '@prisma/client';
 
 export class SeedController {
     static async getByCategory(req: Request, res: Response): Promise<void> {
@@ -9,16 +9,16 @@ export class SeedController {
 
             // Validate category if provided
             if (category && typeof category === 'string') {
-                if (!Object.values(Category).includes(category as Category)) {
+                if (!Object.values(FaqCategory).includes(category as FaqCategory)) {
                     res.status(400).json({
                         success: false,
-                        message: `Invalid category. Must be one of: ${Object.values(Category).join(', ')}`,
+                        message: `Invalid category. Must be one of: ${Object.values(FaqCategory).join(', ')}`,
                     });
                     return;
                 }
             }
 
-            const faqs = await SeedService.getByCategory(category as Category);
+            const faqs = await SeedService.getByCategory(category as FaqCategory);
             res.status(200).json({ success: true, data: faqs });
         } catch (error: any) {
             res.status(400).json({ success: false, message: error.message });

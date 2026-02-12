@@ -1,14 +1,14 @@
 import prisma from '../config/prisma.js';
-import { Category } from '@prisma/client';
+import { FaqCategory } from '@prisma/client';
 
 export class SeedService {
-    static async getByCategory(category?: Category) {
+    static async getByCategory(category?: FaqCategory) {
         const where: any = { isActive: true };
 
         if (category) {
             // Validate category is a valid enum value
-            if (!Object.values(Category).includes(category)) {
-                throw new Error(`Invalid category. Must be one of: ${Object.values(Category).join(', ')}`);
+            if (!Object.values(FaqCategory).includes(category as FaqCategory)) {
+                throw new Error(`Invalid category. Must be one of: ${Object.values(FaqCategory).join(', ')}`);
             }
             where.category = category;
         }

@@ -15,4 +15,11 @@ export const env = {
     jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN!,
     map_url: process.env.MAP_URL!,
     googleMapsKey: process.env.GOOGLE_MAPS_API_KEY!,
+    stripe_secret_key: process.env.STRIPE_SECRET_KEY!,
+    stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET!,
+    platform_commission_percentage: process.env.PLATFORM_COMMISSION_PERCENTAGE!,
+    payout_delay_hours: process.env.PAYOUT_DELAY_HOURS!,
+    currency: process.env.CURRENCY!,
+    stripe_refresh_url: process.env.STRIPE_REFRESH_URL!,
+    stripe_return_url: process.env.STRIPE_RETURN_URL!,
 };

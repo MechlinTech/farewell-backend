@@ -17,7 +17,6 @@ export async function reverseGeocode(lat: number, lng: number) {
             },
         });
 
-        // Log the response status for debugging
         if (data.status !== 'OK') {
             console.error('Google Maps API error:', {
                 status: data.status,
