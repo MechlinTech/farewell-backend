@@ -5,8 +5,9 @@ export class InstantDeliveryCartService {
         customerId: string;
         pickupLat: number;
         pickupLng: number;
-        dropoffLat: number;
-        dropoffLng: number;
+        dropLocation: string;
+        price: number;
+        tip?: number;
         quantity: number;
         size: 'SMALL' | 'MEDIUM' | 'LARGE';
         picture?: string;
@@ -34,8 +35,9 @@ export class InstantDeliveryCartService {
     static async update(id: string, data: Partial<{
         pickupLat: number;
         pickupLng: number;
-        dropoffLat: number;
-        dropoffLng: number;
+        dropLocation: string;
+        price: number;
+        tip: number;
         quantity: number;
         size: 'SMALL' | 'MEDIUM' | 'LARGE';
         picture?: string;

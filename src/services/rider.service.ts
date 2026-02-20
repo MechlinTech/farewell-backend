@@ -11,4 +11,22 @@ export class RiderService {
         }
         return rider;
     }
+
+    /**
+     * Get rider verification status by user id
+     */
+    static async getRiderVerificationStatusByUserId(userId: string) {
+        const rider = await prisma.rider.findFirst({
+            where: { userId },
+            select: {
+                isVerified: true,
+            },
+        });
+
+        if (!rider) {
+            throw new Error("Rider not found");
+        }
+
+        return rider.isVerified;
+    }
 }

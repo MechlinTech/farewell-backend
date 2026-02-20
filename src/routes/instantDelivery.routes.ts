@@ -36,16 +36,20 @@ const router = Router();
  *           format: double
  *           description: Pickup location longitude
  *           example: 77.1025
- *         dropoffLat:
+ *         dropLocation:
+ *           type: string
+ *           description: Dropoff location address
+ *           example: "123 Main St, San Francisco, CA 94102"
+ *         price:
  *           type: number
  *           format: double
- *           description: Dropoff location latitude
- *           example: 28.5355
- *         dropoffLng:
+ *           description: Delivery price
+ *           example: 25.50
+ *         tip:
  *           type: number
  *           format: double
- *           description: Dropoff location longitude
- *           example: 77.3910
+ *           description: Tip amount (default 0)
+ *           example: 5.00
  *         quantity:
  *           type: integer
  *           minimum: 1
@@ -79,8 +83,8 @@ const router = Router();
  *         - customerId
  *         - pickupLat
  *         - pickupLng
- *         - dropoffLat
- *         - dropoffLng
+ *         - dropLocation
+ *         - price
  *         - quantity
  *         - size
  *       properties:
@@ -98,16 +102,20 @@ const router = Router();
  *           format: double
  *           description: Pickup location longitude
  *           example: 77.1025
- *         dropoffLat:
+ *         dropLocation:
+ *           type: string
+ *           description: Dropoff location address
+ *           example: "123 Main St, San Francisco, CA 94102"
+ *         price:
  *           type: number
  *           format: double
- *           description: Dropoff location latitude
- *           example: 28.5355
- *         dropoffLng:
+ *           description: Delivery price
+ *           example: 25.50
+ *         tip:
  *           type: number
  *           format: double
- *           description: Dropoff location longitude
- *           example: 77.3910
+ *           description: Tip amount (optional, default 0)
+ *           example: 5.00
  *         quantity:
  *           type: integer
  *           minimum: 1
@@ -131,12 +139,17 @@ const router = Router();
  *         pickupLng:
  *           type: number
  *           format: double
- *         dropoffLat:
+ *         dropLocation:
+ *           type: string
+ *           description: Dropoff location address
+ *         price:
  *           type: number
  *           format: double
- *         dropoffLng:
+ *           description: Delivery price
+ *         tip:
  *           type: number
  *           format: double
+ *           description: Tip amount
  *         quantity:
  *           type: integer
  *           minimum: 1

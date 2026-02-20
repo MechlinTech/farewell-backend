@@ -9,8 +9,9 @@ export class InstantDeliveryCartController {
                 customerId,
                 pickupLat,
                 pickupLng,
-                dropoffLat,
-                dropoffLng,
+                dropLocation,
+                price,
+                tip,
                 quantity,
                 size,
                 picture,
@@ -20,8 +21,8 @@ export class InstantDeliveryCartController {
                 !customerId ||
                 pickupLat == null ||
                 pickupLng == null ||
-                dropoffLat == null ||
-                dropoffLng == null ||
+                !dropLocation ||
+                price == null ||
                 !quantity ||
                 !size
             ) {
@@ -33,8 +34,9 @@ export class InstantDeliveryCartController {
                 customerId,
                 pickupLat,
                 pickupLng,
-                dropoffLat,
-                dropoffLng,
+                dropLocation,
+                price,
+                tip,
                 quantity,
                 size,
                 picture,

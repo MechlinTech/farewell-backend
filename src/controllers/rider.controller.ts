@@ -44,4 +44,37 @@ export class RiderController {
             });
         }
     }
+
+    /**
+     * Get rider verification status by user ID
+     */
+    static async getVerificationStatus(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.query.userId as string;
+
+            if (!userId) {
+                res.status(400).json({
+                    success: false,
+                    message: 'User ID is required',
+                });
+                return;
+            }
+
+            const verificationStatus = await RiderService.getRiderVerificationStatusByUserId(userId);
+
+            res.status(200).json({
+                success: true,
+                message: 'Verification status fetched successfully',
+                data: {
+                    isVerified: verificationStatus,
+                },
+            });
+        } catch (error: any) {
+            console.error('Error fetching rider verification status:', error);
+            res.status(404).json({
+                success: false,
+                message: error.message || 'Failed to fetch verification status',
+            });
+        }
+    }
 }

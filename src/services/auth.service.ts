@@ -103,20 +103,35 @@ export class AuthService {
     const accessToken = signAccessToken(payload);
     const refreshToken = signRefreshToken(payload);
 
+    // Prepare user response based on role
+    const userResponse: any = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      isVerified: user.isVerified,
+      accountStatus: user.accountStatus,
+      createdAt: user.createdAt,
+    };
+
+    // Add role-specific fields
+    if (user.role === 'CUSTOMER') {
+      userResponse.isLocationSet = user.isLocationSet;
+    } else if (user.role === 'DRIVER') {
+      // Get rider details for driver
+      const rider = await prisma.rider.findFirst({
+        where: { userId: user.id },
+        select: { vehicleDetailSet: true },
+      });
+      userResponse.vehicleDetailSet = rider?.vehicleDetailSet || false;
+    }
+
     return {
       accessToken,
       refreshToken,
-      user: {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        isVerified: user.isVerified,
-        accountStatus: user.accountStatus,
-        createdAt: user.createdAt,
-      },
+      user: userResponse,
     };
   }
 
@@ -184,5 +199,26 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  /**
+   * Create Rider record for DRIVER role users
+   */
+  static async createRiderForDriver(userId: string): Promise<void> {
+    // Check if rider already exists
+    const existingRider = await prisma.rider.findFirst({
+      where: { userId },
+    });
+
+    if (existingRider) {
+      return; // Rider already exists, do nothing
+    }
+
+    // Create rider record
+    await prisma.rider.create({
+      data: {
+        userId,
+      },
+    });
   }
 }

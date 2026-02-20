@@ -109,6 +109,14 @@ export class AuthController {
         return;
       }
 
+      // Get user details to check role
+      const user = await AuthService.getUserById(userId);
+
+      // If user is a DRIVER, create a Rider record
+      if (user.role === 'DRIVER') {
+        await AuthService.createRiderForDriver(userId);
+      }
+
       res.status(200).json({
         success: true,
         message: 'Email verified successfully. You can now login.',

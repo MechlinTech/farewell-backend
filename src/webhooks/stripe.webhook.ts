@@ -25,18 +25,18 @@ router.post("/stripe", express.raw({ type: "application/json" }), async (req, re
         return;
       }
   
-      const verified =
+    const verified =
         account.details_submitted &&
         account.payouts_enabled &&
         account.charges_enabled;
-  
-      await prisma.rider.update({
+
+    await prisma.rider.update({
         where: { id: rider.id },
         data: {
-          isVerified: verified,
-          bankDetails: account.payouts_enabled,
+            isVerified: verified ? 'VERIFIED' : 'UNVERIFIED',
+            bankDetails: account.payouts_enabled,
         },
-      });
+    });
     }
   
     res.status(200).json({

@@ -22,6 +22,8 @@ model User {
   role          Role
   isVerified    Boolean  @default(false)
   accountStatus String   @default("ACTIVE") // ACTIVE | LOCKED
+  fcmToken      String?
+  isLocationSet Boolean  @default(false)
   createdAt     DateTime @default(now())
 
   otps                  Otp[]
@@ -29,7 +31,7 @@ model User {
   rider                 Rider[]
   instantDeliveryCart   instantDeliveryCart[]
   scheduledDeliveryCart ScheduledDeliveryCart[]
-  userLocation          userLocation[]
+  userAddress           userAddress[]
   payment               payment[]
   deliveryRide          deliveryRide[]
 }
@@ -56,17 +58,18 @@ model Otp {
 model VehicleDetail {
   id               String      @id @default(uuid())
   userId           String
+  riderId          String
   vehicleNumber    String      @unique
   model            String
   capacity         Int
   license          String
-  vehicleRCNumber  String
+  vehicleRC        String
   vehicleInsurance String
   vehicleType      vehicleType @default(CAR)
   createdAt        DateTime    @default(now())
 
-  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rider Rider[]
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rider Rider @relation(fields: [riderId], references: [id], onDelete: Cascade)
 }
 
 enum vehicleType {
@@ -76,46 +79,57 @@ enum vehicleType {
 }
 
 model Rider {
-  id              String      @id @default(uuid())
-  userId          String
-  vehicleDetailId String
-  isVerified      Boolean     @default(true)
-  bankDetails     Boolean     @default(false)
-  status          RiderStatus @default(AVAILABLE)
-  active          Boolean     @default(false)
-  stripeAccountId String?
-  createdAt       DateTime    @default(now())
+  id                 String                  @id @default(uuid())
+  userId             String
+  vehicleDetailSet   Boolean                 @default(false)
+  isVerified         riderVerificationStatus @default(UNVERIFIED)
+  bankDetails        Boolean                 @default(false)
+  status             RiderWorkStatus         @default(IDLE)
+  active             Boolean                 @default(false)
+  stripeAccountId    String?
+  currentRideId      String?
+  rating             Int                     @default(0)
+  totalEarnings      Float                   @default(0)
+  createdAt          DateTime                @default(now())
 
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  vehicleDetail VehicleDetail  @relation(fields: [vehicleDetailId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   deliveryRide  deliveryRide[]
+  vehicleDetail VehicleDetail[]
 }
 
-enum RiderStatus {
-  AVAILABLE
-  BUSY
+enum riderVerificationStatus {
+  VERIFIED
+  UNVERIFIED
+  REJECTED
+}
+
+enum RiderWorkStatus {
+  IDLE // no ride
+  ASSIGNED // accepted but not picked
+  PICKED_UP // order picked
+  ON_TRIP
 }
 
 model instantDeliveryCart {
-  id         String         @id @default(uuid())
-  customerId String
-  status     DeliveryStatus @default(PENDING)
+  id           String          @id @default(uuid())
+  customerId   String
+  parcelStatus DeliveryStatus?
+  deliveryType deliveryType    @default(INSTANT_DELIVERY)
 
-  pickupLat  Float
-  pickupLng  Float
-  dropoffLat Float
-  dropoffLng Float
+  pickupLat    Float
+  pickupLng    Float
+  dropLocation String
+  price        Float
+  tip          Float  @default(0)
 
   quantity  Int
   size      Size
   picture   String?
   createdAt DateTime @default(now())
 
-  customer     User           @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  deliveryRide deliveryRide[]
+  customer User @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
   @@index([pickupLat, pickupLng])
-  @@index([dropoffLat, dropoffLng])
 }
 
 enum Size {
@@ -124,23 +138,27 @@ enum Size {
   LARGE
 }
 
+enum deliveryType {
+  INSTANT_DELIVERY
+  SCHEDULED_DELIVERY
+}
+
 enum DeliveryStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
-  FAILED
+  ACCEPTED
+  REJECTED
 }
 
 model ScheduledDeliveryCart {
-  id         String         @id @default(uuid())
-  customerId String
-  status     DeliveryStatus @default(PENDING)
+  id           String          @id @default(uuid())
+  customerId   String
+  parcelStatus DeliveryStatus?
+  deliveryType deliveryType    @default(SCHEDULED_DELIVERY)
 
-  pickupLat  Float
-  pickupLng  Float
-  dropoffLat Float
-  dropoffLng Float
+  pickupLat    Float
+  pickupLng    Float
+  dropLocation String
+  price        Float
+  tip          Float  @default(0)
 
   quantity  Int
   size      Size
@@ -149,23 +167,33 @@ model ScheduledDeliveryCart {
   time      DateTime
   createdAt DateTime @default(now())
 
-  customer     User           @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  deliveryRide deliveryRide[]
+  customer User @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
   @@index([pickupLat, pickupLng])
-  @@index([dropoffLat, dropoffLng])
 }
 
-model userLocation {
-  id          String   @id @default(uuid())
-  userId      String   @unique
-  locationLat Float
-  locationLng Float
-  createdAt   DateTime @default(now())
+model userAddress {
+  id           String      @id @default(uuid())
+  userId       String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  country      String
+  postalCode   String
+  lat          Float
+  lng          Float
+  addressType  addressType
+  isDefault    Boolean     @default(false)
+  createdAt    DateTime    @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  @@index([locationLat, locationLng])
+enum addressType {
+  HOME
+  WORK
+  OTHER
 }
 
 model faq {
@@ -214,8 +242,10 @@ enum escrowStatus {
 
 model deliveryRide {
   id                String             @id @default(uuid())
+  orderId           String             @unique
   customerId        String
   riderId           String?
+  pickupReached     Boolean            @default(false)
   deliveryCartId    String
   paymentId         String?            @unique
   status            deliveryRideStatus @default(PENDING)
@@ -224,23 +254,23 @@ model deliveryRide {
   payoutDone        Boolean            @default(false)
   payoutProcessing  Boolean            @default(false)
   payoutAttemptedAt DateTime?
+  deliveryType      deliveryType
   createdAt         DateTime           @default(now())
 
-  @@index([status, payoutDone, completedAt])
+  customer User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rider    Rider?   @relation(fields: [riderId], references: [id], onDelete: Cascade)
+  payment  payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
-  customer                User                   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  rider                   Rider?                 @relation(fields: [riderId], references: [id], onDelete: Cascade)
-  deliveryCart            instantDeliveryCart    @relation(fields: [deliveryCartId], references: [id], onDelete: Cascade)
-  scheduledDeliveryCartId String?
-  scheduledDeliveryCart   ScheduledDeliveryCart? @relation(fields: [scheduledDeliveryCartId], references: [id], onDelete: Cascade)
-  payment                 payment?               @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  @@index([status, payoutDone, completedAt])
 }
 
 enum deliveryRideStatus {
   PENDING
   ACCEPTED
+  IN_PROGRESS
   REJECTED
   CANCELLED
   COMPLETED
   FAILED
+  RETURNED
 }
