@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { OnboardingLink } from "../utils/onboardingLink.js";
+import { OnboardingLink } from "../utils/onboardingLink.util.js";
 import { RiderService } from "../services/rider.service.js";
 import { StripeConnectService } from "../services/stripeConnect.service.js";
 

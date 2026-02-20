@@ -1,6 +1,6 @@
-import prisma from '../config/prisma.js';
+import prisma from '../config/prisma.config.js';
 import { deliveryType } from '@prisma/client';
-import { getLocationFromZip } from '../utils/getLocationFromZip.js';
+import { getLocationFromZip } from '../utils/getLocationFromZip.util.js';
 
 interface PaginationParams {
     page?: number;

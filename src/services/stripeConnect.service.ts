@@ -1,5 +1,5 @@
-import prisma from "../config/prisma.js";
-import { stripe } from "../config/stripe.js";
+import prisma from "../config/prisma.config.js";
+import { stripe } from "../config/stripe.config.js";
 
 export class StripeConnectService {
   /**

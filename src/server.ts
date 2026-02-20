@@ -1,4 +1,4 @@
-import { env } from "./config/env.js"
+import { env } from "./config/env.config.js"
 
 import app from './app.js';
 

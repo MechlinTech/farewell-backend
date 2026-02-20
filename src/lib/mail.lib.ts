@@ -1,5 +1,5 @@
 import sgMail from '@sendgrid/mail';
-import { env } from '../config/env.js';
+import { env } from '../config/env.config.js';
 
 const SENDGRID_API_KEY = env.sendgrid_api_key;
 const EMAIL_FROM = env.email_from;

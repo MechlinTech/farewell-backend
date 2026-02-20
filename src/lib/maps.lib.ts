@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { env } from '../config/env.js';
+import { env } from '../config/env.config.js';
 
 export async function reverseGeocode(lat: number, lng: number) {
     try {

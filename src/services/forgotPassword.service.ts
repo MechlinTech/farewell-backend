@@ -1,7 +1,7 @@
-import prisma from '../config/prisma.js';
+import prisma from '../config/prisma.config.js';
 import bcrypt from 'bcrypt';
-import { generateOTP, OTP_CONFIG } from '../utils/otp.js';
-import { sendOTPEmail, sendAccountLockedEmail } from '../lib/mail.js';
+import { generateOTP, OTP_CONFIG } from '../utils/otp.util.js';
+import { sendOTPEmail, sendAccountLockedEmail } from '../lib/mail.lib.js';
 
 const SALT_ROUNDS = 12;
 

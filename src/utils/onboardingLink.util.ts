@@ -1,5 +1,5 @@
-import { stripe } from "../config/stripe.js";
-import { env } from "../config/env.js";
+import { stripe } from "../config/stripe.config.js";
+import { env } from "../config/env.config.js";
 
 export class OnboardingLink {
     /**

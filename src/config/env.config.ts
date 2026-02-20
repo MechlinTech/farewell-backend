@@ -22,4 +22,9 @@ export const env = {
     currency: process.env.CURRENCY!,
     stripe_refresh_url: process.env.STRIPE_REFRESH_URL!,
     stripe_return_url: process.env.STRIPE_RETURN_URL!,
+    AWS_S3_ACCESS_KEY: process.env.AWS_S3_ACCESS_KEY!,
+    AWS_S3_SECRET_KEY: process.env.AWS_S3_SECRET_KEY!,
+    AWS_REGION: process.env.AWS_REGION!,
+    PUBLIC_BUCKET_NAME: process.env.PUBLIC_BUCKET_NAME!,
+    PRIVATE_BUCKET_NAME: process.env.PRIVATE_BUCKET_NAME!,
 };

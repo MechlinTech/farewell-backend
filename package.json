@@ -14,6 +14,7 @@
   "description": "",
   "type": "module",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.995.0",
     "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^7.4.1",
     "@sendgrid/mail": "^8.1.6",
@@ -24,6 +25,7 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.2",
     "node-cron": "^4.2.1",
     "pg": "^8.18.0",
     "prisma": "^7.4.1",

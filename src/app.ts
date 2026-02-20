@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './config/swagger.js';
+import { swaggerSpec } from './config/swagger.config.js';
 import mainRouter from './routes/index.routes.js';
 import stripeWebhookRouter from './webhooks/stripe.webhook.js';
 

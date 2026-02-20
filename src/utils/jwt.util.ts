@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import type { SignOptions, VerifyOptions, JwtPayload } from 'jsonwebtoken';
-import { env } from '../config/env.js';
+import { env } from '../config/env.config.js';
 
 const JWT_SECRET = env.jwt_secret as string;
 const JWT_REFRESH_SECRET = env.jwt_refresh_secret as string;

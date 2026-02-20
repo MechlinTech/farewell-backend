@@ -1,8 +1,8 @@
 import express from 'express';
-import prisma from '../config/prisma.js';
-import { stripe } from '../config/stripe.js';
+import prisma from '../config/prisma.config.js';
+import { stripe } from '../config/stripe.config.js';
 import { Router } from 'express';
-import { env } from '../config/env.js';
+import { env } from '../config/env.config.js';
 
 const router = Router();
 

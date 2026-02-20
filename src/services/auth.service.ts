@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { signAccessToken, signRefreshToken, verifyRefreshToken, type AppJwtPayload } from '../utils/jwt.js';
-import prisma from '../config/prisma.js';
+import { signAccessToken, signRefreshToken, verifyRefreshToken, type AppJwtPayload } from '../utils/jwt.util.js';
+import prisma from '../config/prisma.config.js';
 const SALT_ROUNDS = 12;
 
 export class AuthService {
