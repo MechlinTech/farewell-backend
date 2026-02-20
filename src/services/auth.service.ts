@@ -105,15 +105,15 @@ export class AuthService {
 
     // Prepare user response based on role
     const userResponse: any = {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      phone: user.phone,
-      role: user.role,
-      isVerified: user.isVerified,
-      accountStatus: user.accountStatus,
-      createdAt: user.createdAt,
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        isVerified: user.isVerified,
+        accountStatus: user.accountStatus,
+        createdAt: user.createdAt,
     };
 
     // Add role-specific fields

@@ -1,0 +1,4 @@
+{
+  "ignore": ["dist", "node_modules", "generated"],
+  "exec": "node --watch --watch-path src --import tsx src/server.ts"
+}
