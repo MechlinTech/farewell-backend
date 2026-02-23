@@ -11,6 +11,23 @@ export class CustomerService {
     /**
      * Get all orders for a customer with pagination and delivery details
      */
+
+static async getRideStatus(customerId: string, orderId: string) {
+  const ride = await prisma.deliveryRide.findFirst({
+    where: {
+      orderId,
+      customerId,
+    },
+    select: {
+      orderId: true,
+      status: true,
+    },
+  });
+
+  if (!ride) throw new Error("RIDE_NOT_FOUND");
+
+  return ride;
+}
     static async getMyOrders(customerId: string, { page = 1, limit = 10 }: PaginationParams) {
         // Calculate pagination
         const skip = (page - 1) * limit;
