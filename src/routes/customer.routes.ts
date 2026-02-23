@@ -626,5 +626,79 @@ router.delete('/addresses/:id', authenticate, CustomerController.deleteMyAddress
  *         description: Internal server error
  */
 router.patch('/addresses/:id/set-default', authenticate, CustomerController.setMyDefaultAddress);
+/**
+ * @swagger
+ * /customer/rides/{orderId}/validation:
+ *   get:
+ *     summary: Validate ride completion status
+ *     description: Checks whether a specific ride is completed for the authenticated customer based on the order ID.
+ *     tags: [Customer]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "ORD-123456"
+ *         description: Unique order ID of the ride
+ *     responses:
+ *       200:
+ *         description: Ride validation result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ride completed"
+ *       400:
+ *         description: Bad request - Order ID missing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "orderId required"
+ *       401:
+ *         description: Unauthorized - User not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: Ride not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Ride not found"
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/rides/:orderId/validation',authenticate,CustomerController.validateRide);
 
 export default router;

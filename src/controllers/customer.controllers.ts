@@ -5,6 +5,56 @@ export class CustomerController {
     /**
      * Get my orders with pagination and delivery details
      */
+static async validateRide(req: Request, res: Response): Promise<void> {
+  try {
+    const customerId = req.userId as string;
+   const orderId = Array.isArray(req.params.orderId)
+  ? req.params.orderId[0]
+  : req.params.orderId;
+
+    if (!customerId) {
+      res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    if (!orderId) {
+      res.status(400).json({
+        success: false,
+        message: "Order ID required",
+      });
+      return;
+    }
+
+    const ride = await CustomerService.getRideStatus(customerId, orderId);
+
+    res.status(200).json({
+      success: true,
+      message:`Delivery status fetched: ${ride.status}`,
+       
+      status: ride.status,
+      orderId: ride.orderId,
+    });
+
+  } catch (err: any) {
+    if (err.message === "RIDE_NOT_FOUND") {
+      res.status(404).json({
+        success: false,
+        message: "Ride not found",
+      });
+      return;
+    }
+
+    console.error("Error validating ride status:", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
     static async getMyOrders(req: Request, res: Response): Promise<void> {
         try {
             const customerId = req.userId;
