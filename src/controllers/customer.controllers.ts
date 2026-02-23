@@ -7,7 +7,7 @@ export class CustomerController {
      */
 static async validateRide(req: Request, res: Response): Promise<void> {
   try {
-    const customerId = req.userId;
+    const customerId = req.userId as string;
    const orderId = Array.isArray(req.params.orderId)
   ? req.params.orderId[0]
   : req.params.orderId;
@@ -32,10 +32,8 @@ static async validateRide(req: Request, res: Response): Promise<void> {
 
     res.status(200).json({
       success: true,
-      message:
-        ride.status === "COMPLETED"
-          ? "Ride completed ✅"
-          : `Ride status fetched: ${ride.status}`,
+      message:`Delivery status fetched: ${ride.status}`,
+       
       status: ride.status,
       orderId: ride.orderId,
     });

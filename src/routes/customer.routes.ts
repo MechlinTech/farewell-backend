@@ -656,7 +656,7 @@ router.patch('/addresses/:id/set-default', authenticate, CustomerController.setM
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Ride completed ✅"
+ *                   example: "Ride completed"
  *       400:
  *         description: Bad request - Order ID missing
  *         content:
@@ -699,6 +699,6 @@ router.patch('/addresses/:id/set-default', authenticate, CustomerController.setM
  *       500:
  *         description: Internal server error
  */
-router.get('/rides/:orderId/validation', authenticate,CustomerController.validateRide);
+router.get('/rides/:orderId/validation',authenticate,CustomerController.validateRide);
 
 export default router;

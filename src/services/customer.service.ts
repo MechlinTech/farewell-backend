@@ -13,20 +13,21 @@ export class CustomerService {
      */
 
 static async getRideStatus(customerId: string, orderId: string) {
-  const ride = await prisma.deliveryRide.findFirst({
-    where: {
-      orderId,
-      customerId,
-    },
+  const ride = await prisma.deliveryRide.findUnique({
+    where: { orderId },
     select: {
       orderId: true,
       status: true,
+      customerId: true,
     },
   });
 
-  if (!ride) throw new Error("RIDE_NOT_FOUND");
+  if (!ride || ride.customerId !== customerId)
+    throw new Error("RIDE_NOT_FOUND");
 
   return ride;
+
+ 
 }
     static async getMyOrders(customerId: string, { page = 1, limit = 10 }: PaginationParams) {
         // Calculate pagination
