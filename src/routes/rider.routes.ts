@@ -137,4 +137,154 @@ router.post('/start-rider-kyc', authenticate, RiderController.startRiderKyc);
  */
 router.get('/verification-status', RiderController.getVerificationStatus);
 
+/**
+ * @swagger
+ * /rider/active-status:
+ *   post:
+ *     summary: Update rider active status by user ID
+ *     description: Sets rider active status. active can be false only when rider is VERIFIED and IDLE.
+ *     tags: [Rider]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - active
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 format: uuid
+ *                 example: "550e8400-e29b-41d4-a716-446655440000"
+ *               active:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Rider active status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Rider active status updated successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: string
+ *                       format: uuid
+ *                     isVerified:
+ *                       type: string
+ *                       enum: [VERIFIED, UNVERIFIED, REJECTED]
+ *                     status:
+ *                       type: string
+ *                       enum: [IDLE, ASSIGNED, PICKED_UP, ON_TRIP]
+ *                     active:
+ *                       type: boolean
+ *       400:
+ *         description: Invalid request or business rule violation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "active can be false only when rider is VERIFIED and IDLE"
+ *       404:
+ *         description: Rider not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Rider not found"
+ */
+router.post('/active-status', RiderController.updateActiveStatus);
+
+/**
+ * @swagger
+ * /rider/total-earnings:
+ *   get:
+ *     summary: Get rider total earnings by user ID
+ *     description: Retrieves rider totalEarnings using rider userId
+ *     tags: [Rider]
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: User ID of the rider
+ *         example: "550e8400-e29b-41d4-a716-446655440000"
+ *     responses:
+ *       200:
+ *         description: Rider total earnings fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Rider total earnings fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: string
+ *                       format: uuid
+ *                     totalEarnings:
+ *                       type: number
+ *                       format: float
+ *                       example: 1250.5
+ *       400:
+ *         description: Bad request - Missing user ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "User ID is required"
+ *       404:
+ *         description: Rider not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Rider not found"
+ */
+router.get('/total-earnings', authenticate, RiderController.getTotalEarnings);
+
 export default router;
