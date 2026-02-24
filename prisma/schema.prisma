@@ -79,18 +79,18 @@ enum vehicleType {
 }
 
 model Rider {
-  id                 String                  @id @default(uuid())
-  userId             String
-  vehicleDetailSet   Boolean                 @default(false)
-  isVerified         riderVerificationStatus @default(UNVERIFIED)
-  bankDetails        Boolean                 @default(false)
-  status             RiderWorkStatus         @default(IDLE)
-  active             Boolean                 @default(false)
-  stripeAccountId    String?
-  currentRideId      String?
-  rating             Int                     @default(0)
-  totalEarnings      Float                   @default(0)
-  createdAt          DateTime                @default(now())
+  id               String                  @id @default(uuid())
+  userId           String
+  vehicleDetailSet Boolean                 @default(false)
+  isVerified       riderVerificationStatus @default(UNVERIFIED)
+  bankDetails      Boolean                 @default(false)
+  status           RiderWorkStatus         @default(IDLE)
+  active           Boolean                 @default(false)
+  stripeAccountId  String?
+  currentRideId    String?
+  rating           Int                     @default(0)
+  totalEarnings    Float                   @default(0)
+  createdAt        DateTime                @default(now())
 
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   deliveryRide  deliveryRide[]
@@ -255,11 +255,13 @@ model deliveryRide {
   payoutProcessing  Boolean            @default(false)
   payoutAttemptedAt DateTime?
   deliveryType      deliveryType
+  dropOffLat        Float?
+  dropOffLng        Float?
   createdAt         DateTime           @default(now())
 
-  customer User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  rider    Rider?   @relation(fields: [riderId], references: [id], onDelete: Cascade)
-  payment  payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  customer   User         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rider      Rider?       @relation(fields: [riderId], references: [id], onDelete: Cascade)
+  payment    payment?     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
   @@index([status, payoutDone, completedAt])
 }

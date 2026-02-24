@@ -77,4 +77,76 @@ export class RiderController {
             });
         }
     }
+
+    /**
+     * Update rider active status by user ID
+     */
+    static async updateActiveStatus(req: Request, res: Response): Promise<void> {
+        try {
+            const { userId, active } = req.body;
+
+            if (!userId) {
+                res.status(400).json({
+                    success: false,
+                    message: 'User ID is required',
+                });
+                return;
+            }
+
+            if (typeof active !== 'boolean') {
+                res.status(400).json({
+                    success: false,
+                    message: 'active must be a boolean',
+                });
+                return;
+            }
+
+            const rider = await RiderService.updateRiderActiveStatusByUserId(userId, active);
+
+            res.status(200).json({
+                success: true,
+                message: 'Rider active status updated successfully',
+                data: rider,
+            });
+        } catch (error: any) {
+            console.error('Error updating rider active status:', error);
+            const statusCode = error.message === 'Rider not found' ? 404 : 400;
+            res.status(statusCode).json({
+                success: false,
+                message: error.message || 'Failed to update rider active status',
+            });
+        }
+    }
+
+    /**
+     * Get rider total earnings by user ID
+     */
+    static async getTotalEarnings(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.query.userId as string;
+
+            if (!userId) {
+                res.status(400).json({
+                    success: false,
+                    message: 'User ID is required',
+                });
+                return;
+            }
+
+            const rider = await RiderService.getRiderTotalEarningsByUserId(userId);
+
+            res.status(200).json({
+                success: true,
+                message: 'Rider total earnings fetched successfully',
+                data: rider,
+            });
+        } catch (error: any) {
+            console.error('Error fetching rider total earnings:', error);
+            const statusCode = error.message === 'Rider not found' ? 404 : 400;
+            res.status(statusCode).json({
+                success: false,
+                message: error.message || 'Failed to fetch rider total earnings',
+            });
+        }
+    }
 }
