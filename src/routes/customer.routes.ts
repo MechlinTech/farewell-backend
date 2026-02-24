@@ -700,5 +700,57 @@ router.patch('/addresses/:id/set-default', authenticate, CustomerController.setM
  *         description: Internal server error
  */
 router.get('/rides/:orderId/validation',authenticate,CustomerController.validateRide);
+/**
+ * @swagger
+ * /customer/orders/{orderId}/cart:
+ *   get:
+ *     summary: Get cart details for a particular order
+ *     description: Fetch cart details (instant or scheduled) for a specific order belonging to the logged-in customer.
+ *     tags:
+ *       - Customer
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         description: Unique order ID of the delivery ride
+ *         schema:
+ *           type: string
+ *           example: ORD-12345
+ *     responses:
+ *       200:
+ *         description: Cart details fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Cart fetched successfully
+ *                 deliveryType:
+ *                   type: string
+ *                   enum:
+ *                     - INSTANT_DELIVERY
+ *                     - SCHEDULED_DELIVERY
+ *                 data:
+ *                   type: object
+ *                   description: Cart details based on delivery type
+ *       401:
+ *         description: Unauthorized (missing or invalid token)
+ *       404:
+ *         description: Order or cart not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get(
+  "/orders/:orderId/cart",
+  authenticate,
+  CustomerController.getCartDetails
+);
 
 export default router;

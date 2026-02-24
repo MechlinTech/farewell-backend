@@ -11,7 +11,41 @@ export class CustomerService {
     /**
      * Get all orders for a customer with pagination and delivery details
      */
+static async getCartDetailsByOrderId(customerId: string, orderId: string) {
+  // Step 1 — Find ride
+  const ride = await prisma.deliveryRide.findUnique({
+    where: { orderId },
+    select: {
+      deliveryCartId: true,
+      deliveryType: true,
+      customerId: true,
+    },
+  });
 
+  // Step 2 — Validate ownership
+  if (!ride || ride.customerId !== customerId) {
+    throw new Error("ORDER_NOT_FOUND");
+  }
+
+  // Step 3 — Fetch cart based on delivery type
+  let cart = null;
+
+  if (ride.deliveryType === "INSTANT_DELIVERY") {
+    cart = await prisma.instantDeliveryCart.findUnique({
+      where: { id: ride.deliveryCartId },
+    });
+  }
+
+  if (ride.deliveryType === "SCHEDULED_DELIVERY") {
+    cart = await prisma.scheduledDeliveryCart.findUnique({
+      where: { id: ride.deliveryCartId },
+    });
+  }
+
+  if (!cart) throw new Error("CART_NOT_FOUND");
+
+  return cart;
+}
 static async getRideStatus(customerId: string, orderId: string) {
   const ride = await prisma.deliveryRide.findUnique({
     where: { orderId },

@@ -5,9 +5,58 @@ export class CustomerController {
     /**
      * Get my orders with pagination and delivery details
      */
-static async validateRide(req: Request, res: Response): Promise<void> {
+  static async getCartDetails(req: Request, res: Response) {
   try {
     const customerId = req.userId as string;
+  
+
+const rawOrderId = req.params.orderId;
+
+const orderId = Array.isArray(rawOrderId)
+  ? rawOrderId[0]
+  : rawOrderId;
+ if (!customerId) {
+      res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+      return;
+    }
+if (!orderId) {
+  res.status(400).json({
+    success: false,
+    message: "Order ID required",
+  });
+  return;
+}
+
+    const cart = await CustomerService.getCartDetailsByOrderId(
+      customerId,
+      orderId
+    );
+
+
+    res.status(200).json({
+      success: true,
+      message: "Cart fetched successfully",
+      data: cart,
+    });
+
+  } catch (err: any) {
+    if (err.message === "ORDER_NOT_FOUND") {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    if (err.message === "CART_NOT_FOUND") {
+      return res.status(404).json({ success: false, message: "Cart not found" });
+    }
+
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+}
+static async validateRide(req: Request, res: Response): Promise<void> {
+  try {
+    const customerId = req.userId as string ;
    const orderId = Array.isArray(req.params.orderId)
   ? req.params.orderId[0]
   : req.params.orderId;
