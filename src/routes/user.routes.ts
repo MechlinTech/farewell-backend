@@ -115,7 +115,6 @@ const router = Router();
  */
 router.post("/createmessage", authenticate, ContactController.createContact);
 
-
 /**
  * @swagger
  * /contact/getmessagesbyuserid:
@@ -148,8 +147,11 @@ router.post("/createmessage", authenticate, ContactController.createContact);
  *       500:
  *         description: Internal server error
  */
-router.get("/getmessagesbyuserid", authenticate, ContactController.getMyContacts);
-
+router.get(
+  "/getmessagesbyuserid",
+  authenticate,
+  ContactController.getMyContacts,
+);
 
 /**
  * @swagger
@@ -193,7 +195,11 @@ router.get("/getmessagesbyuserid", authenticate, ContactController.getMyContacts
  *       500:
  *         description: Internal server error
  */
-router.get("/getmessagesbyid/:id",  authenticate,ContactController.getContactById);
+router.get(
+  "/getmessagesbyid/:id",
+  authenticate,
+  ContactController.getContactById,
+);
 /**
  * @swagger
  * /contact/getmessagesbyidadmin/{id}:
@@ -236,12 +242,12 @@ router.get("/getmessagesbyid/:id",  authenticate,ContactController.getContactByI
  *       500:
  *         description: Internal server error
  */
-router.get("/getmessagesbyidadmin/:id",  authenticate,authorize("ADMIN"), ContactController.getContactByIdadmin);
-
-
-
-
-
+router.get(
+  "/getmessagesbyidadmin/:id",
+  authenticate,
+  authorize("ADMIN"),
+  ContactController.getContactByIdadmin,
+);
 
 /**
  * @swagger
@@ -268,17 +274,16 @@ router.get("/getmessagesbyidadmin/:id",  authenticate,authorize("ADMIN"), Contac
  *                   items:
  *                     type: object
  *                     properties:
- *                       value:
+ *                       id:
+ *                         type: string
+ *                         example: 550e8400-e29b-41d4-a716-446655440000
+ *                       type:
  *                         type: string
  *                         example: PAYMENT_AND_REFUND
- *                       label:
- *                         type: string
- *                         example: Payment & Refund
  *       500:
  *         description: Server error
  */
-router.get("/categories", authenticate,ContactController.getProblemCategories);
-
+router.get("/categories", authenticate, ContactController.getProblemCategories);
 
 /**
  * @swagger
@@ -314,10 +319,6 @@ router.get("/categories", authenticate,ContactController.getProblemCategories);
  *       500:
  *         description: Internal server error
  */
-router.get(
-  "/allmessages",
-  authenticate,
-  authorize("ADMIN"),
-  ContactController.getAllContacts);
+router.get("/allmessages",authenticate,authorize("ADMIN"),ContactController.getAllContacts);
 
 export default router;

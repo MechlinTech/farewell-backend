@@ -26,6 +26,9 @@ export class AuthService {
         // Delete associated OTPs first (cascade may not be configured)
         await prisma.otp.deleteMany({
           where: { userId: existingUser.id },
+
+
+          
         });
         
         // Delete the unverified user
