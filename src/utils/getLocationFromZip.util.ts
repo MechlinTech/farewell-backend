@@ -51,7 +51,7 @@ export async function getLocationFromZip(zipcode: string): Promise<ZipLocation> 
         }
 
         if (!data.results?.length) {
-            console.warn('No results found for zipcode:', { zipcode });
+            console.error('No results found for zipcode:', { zipcode });
             throw new Error('No location found for the provided zipcode');
         }
 
@@ -74,7 +74,7 @@ export async function getLocationFromZip(zipcode: string): Promise<ZipLocation> 
 
         // Validate that all required fields are present
         if (!city || !state || !country) {
-            console.warn('Incomplete location data for zipcode:', {
+            console.error('Incomplete location data for zipcode:', {
                 zipcode,
                 city,
                 state,

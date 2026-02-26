@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
-    "build": "tsc",
+    "check:md-location": "node scripts/check-md-location.mjs",
+    "lint": "npm run check:md-location && eslint \"src/**/*.ts\"",
+    "build": "npm run lint && tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],
