@@ -28,7 +28,7 @@ export async function reverseGeocode(lat: number, lng: number) {
         }
 
         if (!data.results?.length) {
-            console.warn('No results found for coordinates:', { lat, lng });
+            console.error('No results found for coordinates:', { lat, lng });
             return null;
         }
 
