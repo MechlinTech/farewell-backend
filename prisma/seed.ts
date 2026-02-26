@@ -1,4 +1,4 @@
-import prisma from '../src/config/prisma.js';
+import prisma from '../src/config/prisma.config.js';
 import { faqSeed } from './seed-data/faq.data.js';
 
 async function main() {

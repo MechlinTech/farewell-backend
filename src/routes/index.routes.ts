@@ -4,6 +4,7 @@ import instantDeliveryRoutes from './instantDelivery.routes.js';
 import faqRoutes from './seed.routes.js';
 import riderRoutes from './rider.routes.js';
 import customerRoutes from './customer.routes.js';
+import userRoutes from './user.routes.js';
 
 const mainRouter = Router();
 
@@ -12,5 +13,7 @@ mainRouter.use('/instantDelivery', instantDeliveryRoutes);
 mainRouter.use('/faqs', faqRoutes);
 mainRouter.use('/rider', riderRoutes);
 mainRouter.use('/customer', customerRoutes);
+mainRouter.use('/contact', userRoutes);
+
 
 export default mainRouter;
