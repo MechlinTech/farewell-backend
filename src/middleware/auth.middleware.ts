@@ -36,7 +36,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     req.userRole = decoded.role;
 
     next();
-  } catch (error: any) {
+  } catch {
     res.status(401).json({
       success: false,
       message: 'Invalid or expired token',
