@@ -34,6 +34,7 @@ model User {
   userAddress           userAddress[]
   payment               payment[]
   deliveryRide          deliveryRide[]
+  contactUs             contactUs[]
 }
 
 enum Role {
@@ -259,9 +260,9 @@ model deliveryRide {
   dropOffLng        Float?
   createdAt         DateTime           @default(now())
 
-  customer   User         @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  rider      Rider?       @relation(fields: [riderId], references: [id], onDelete: Cascade)
-  payment    payment?     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  customer User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rider    Rider?   @relation(fields: [riderId], references: [id], onDelete: Cascade)
+  payment  payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
   @@index([status, payoutDone, completedAt])
 }
@@ -275,4 +276,29 @@ enum deliveryRideStatus {
   COMPLETED
   FAILED
   RETURNED
+}
+
+enum contactUsCategories {
+  PAYMENT_AND_REFUND
+  DELIVERY_AND_RIDER
+  ACCOUNT_AND_VERIFICATION
+  TECHNICAL_ISSUES
+  SAFETY_FRAUD_AND_POLICY
+}
+
+model contactCategory {
+  id   String              @id @default(uuid())
+  type contactUsCategories @unique
+}
+
+model contactUs {
+  id        String              @id @default(uuid())
+  userId    String
+  name      String
+  emailId   String
+  message   String
+  createdAt DateTime            @default(now())
+  category  contactUsCategories
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

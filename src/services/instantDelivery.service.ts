@@ -1,3 +1,4 @@
+import type { Size } from '@prisma/client';
 import prisma from '../config/prisma.config.js';
 
 export class InstantDeliveryCartService {
@@ -9,7 +10,7 @@ export class InstantDeliveryCartService {
         price: number;
         tip?: number;
         quantity: number;
-        size: 'SMALL' | 'MEDIUM' | 'LARGE';
+        size: Size;
         picture?: string;
     }) {
         const user = await prisma.user.findUnique({ where: { id: data.customerId } });

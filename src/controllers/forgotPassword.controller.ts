@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { ForgotPasswordService } from '../services/forgotPassword.service.js';
+import { emailRegex } from '../utils/emailRegex.util.js';
 
 export class ForgotPasswordController {
   /**
@@ -19,7 +20,7 @@ export class ForgotPasswordController {
       }
 
       // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
       if (!emailRegex.test(email)) {
         res.status(400).json({
           success: false,
