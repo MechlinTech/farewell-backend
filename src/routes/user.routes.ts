@@ -119,11 +119,29 @@ router.post("/createmessage", authenticate, ContactController.createContact);
  * @swagger
  * /contact/getmessagesbyuserid:
  *   get:
- *     summary: Get my contact messages
- *     description: Retrieves all contact messages for the authenticated user
+ *     summary: Get my contact messages (Pagination applied)
+ *     description: Retrieves contact messages for the authenticated user with pagination support.
  *     tags: [Contact]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *           minimum: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *           minimum: 1
+ *           maximum: 100
+ *         description: Number of records per page
  *     responses:
  *       200:
  *         description: Contacts fetched successfully
@@ -137,21 +155,40 @@ router.post("/createmessage", authenticate, ContactController.createContact);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Contacts fetched successfully"
+ *                   example: Messages retrieved successfully
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Contact'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     totalPages:
+ *                       type: integer
+ *                       example: 3
+ *                     totalCount:
+ *                       type: integer
+ *                       example: 25
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *                     hasNextPage:
+ *                       type: boolean
+ *                       example: true
+ *                     hasPrevPage:
+ *                       type: boolean
+ *                       example: false
+ *       400:
+ *         description: Invalid pagination parameters
  *       401:
  *         description: Unauthorized
  *       500:
  *         description: Internal server error
  */
-router.get(
-  "/getmessagesbyuserid",
-  authenticate,
-  ContactController.getMyContacts,
-);
+router.get("/getmessagesbyuserid", authenticate, ContactController.getMyContacts);
 
 /**
  * @swagger
@@ -195,11 +232,7 @@ router.get(
  *       500:
  *         description: Internal server error
  */
-router.get(
-  "/getmessagesbyid/:id",
-  authenticate,
-  ContactController.getContactById,
-);
+router.get("/getmessagesbyid/:id", authenticate, ContactController.getContactById);
 /**
  * @swagger
  * /contact/getmessagesbyidadmin/{id}:
@@ -242,12 +275,7 @@ router.get(
  *       500:
  *         description: Internal server error
  */
-router.get(
-  "/getmessagesbyidadmin/:id",
-  authenticate,
-  authorize("ADMIN"),
-  ContactController.getContactByIdadmin,
-);
+router.get("/getmessagesbyidadmin/:id", authenticate, authorize("ADMIN"), ContactController.getContactByIdadmin);
 
 /**
  * @swagger
@@ -289,11 +317,32 @@ router.get("/categories", authenticate, ContactController.getProblemCategories);
  * @swagger
  * /contact/allmessages:
  *   get:
- *     summary: Get all contact messages (Admin only)
- *     description: Retrieves all contact messages in the system. Only accessible by ADMIN users.
+ *     summary: Get all contact messages (Admin only)(Pagination applied)
+ *     description: Retrieves all contact messages in the system with pagination. Only accessible by ADMIN users.
  *     tags: [Contact]
  *     security:
  *       - bearerAuth: []
+ *
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number (must be >= 1)
+ *
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of records per page (1–100)
+ *
  *     responses:
  *       200:
  *         description: All contact messages retrieved successfully
@@ -312,13 +361,34 @@ router.get("/categories", authenticate, ContactController.getProblemCategories);
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Contact'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 120
+ *                     page:
+ *                       type: integer
+ *                       example: 1
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *                     totalPages:
+ *                       type: integer
+ *                       example: 12
+ *
+ *       400:
+ *         description: Invalid pagination parameters
+ *
  *       401:
  *         description: Unauthorized — Token missing or invalid
+ *
  *       403:
  *         description: Forbidden — Only ADMIN can access
+ *
  *       500:
  *         description: Internal server error
  */
-router.get("/allmessages",authenticate,authorize("ADMIN"),ContactController.getAllContacts);
+router.get("/allmessages", authenticate, authorize("ADMIN"), ContactController.getAllContacts);
 
 export default router;

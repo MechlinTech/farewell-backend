@@ -152,16 +152,35 @@ export class ContactController {
       if (!userId) {
         res.status(401).json({
           success: false,
+          message: "Unauthorized",
         });
         return;
       }
 
-      const contacts = await ContactService.getContactsByUserId(userId);
+      // Get pagination params (same standard)
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      // Validate pagination
+      if (page < 1 || limit < 1 || limit > 100) {
+        res.status(400).json({
+          success: false,
+          message:
+            "Invalid pagination parameters. Page must be >= 1 and limit must be between 1 and 100",
+        });
+        return;
+      }
+
+      const result = await ContactService.getContactsByUserId(userId, {
+        page,
+        limit,
+      });
 
       res.status(200).json({
         success: true,
         message: "Messages retrieved successfully",
-        data: contacts,
+        data: result.contacts,
+        pagination: result.pagination,
       });
     } catch (error: any) {
       res.status(500).json({
@@ -194,18 +213,28 @@ export class ContactController {
   }
   static async getAllContacts(req: Request, res: Response): Promise<void> {
     try {
-      const contacts = await ContactService.getAllContacts();
-
+      // Get pagination parameters
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      if (page < 1 || limit < 1 || limit > 100) {
+        res.status(400).json({
+          success: false,
+          message:
+            "Invalid pagination parameters. Page must be >= 1 and limit must be between 1 and 100",
+        });
+        return;
+      }
+      const result = await ContactService.getAllContacts({ page, limit });
       res.status(200).json({
         success: true,
         message: "All contact messages retrieved",
-        data: contacts,
+        data: result.contacts,
+        pagination: result.pagination,
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({
         success: false,
-        message:
-          error instanceof Error ? error.message : "Failed to fetch contacts",
+        message: error.message || "Failed to fetch contacts",
       });
     }
   }

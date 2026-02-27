@@ -1,6 +1,6 @@
 import prisma from '../src/config/prisma.config.js';
 import { faqSeed } from './seed-data/faq.data.js';
-import { CONTACT_CATEGORIES } from './seed-data/contact-categories.data';
+import { contact_categories} from './seed-data/contact-categories.data';
 
 async function main() {
     for(const faq of faqSeed) {
@@ -11,7 +11,7 @@ async function main() {
         })
     }
     console.log('FAQ seeding completed');
-      for (const category of CONTACT_CATEGORIES) {
+      for (const category of contact_categories) {
     await prisma.contactCategory.upsert({
       where: { type: category.type }, 
       update: {},

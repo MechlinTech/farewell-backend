@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service.js';
 import { OTPService } from '../services/otp.service.js';
+import { emailRegex } from '../utils/emailRegex.util.js';
 
 export class AuthController {
   /**
@@ -20,7 +21,7 @@ export class AuthController {
       }
 
       // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
       if (!emailRegex.test(email)) {
         res.status(400).json({
           success: false,

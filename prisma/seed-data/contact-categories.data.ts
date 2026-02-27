@@ -1,6 +1,6 @@
 import { contactUsCategories } from "@prisma/client";
 
-export const CONTACT_CATEGORIES = [
+export const contact_categories = [
   { type: contactUsCategories.PAYMENT_AND_REFUND },
   { type: contactUsCategories.DELIVERY_AND_RIDER },
   { type: contactUsCategories.ACCOUNT_AND_VERIFICATION },
