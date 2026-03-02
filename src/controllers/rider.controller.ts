@@ -10,6 +10,30 @@ export class RiderController {
     /**
      * Start rider KYC
      */
+    static async getVehicleTypes(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.userId;
+            if (!userId) {
+                res.status(401).json({
+                    success: false,
+                });
+                return;
+            }
+            const vehicleTypes = await RiderService.getVehicleTypes();
+
+            res.status(200).json({
+                success: true,
+                message: 'Vehicle types retrieved successfully',
+                data: vehicleTypes,
+            });
+        } catch (error: any) {
+            res.status(500).json({
+                success: false,
+                message: error.message || 'Failed to retrieve vehicle types',
+            });
+        }
+    }
+
     static async startRiderKyc(req: Request, res: Response): Promise<void> {
         try {
             const riderId = req.userId;

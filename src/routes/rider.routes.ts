@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { RiderController } from '../controllers/rider.controller.js';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticate, authorize } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -286,5 +286,53 @@ router.post('/active-status', RiderController.updateActiveStatus);
  *                   example: "Rider not found"
  */
 router.get('/total-earnings', authenticate, RiderController.getTotalEarnings);
+
+/**
+ * @swagger
+ * /rider/vehicle-types:
+ *   get:
+ *     summary: Get all available vehicle types
+ *     description: Returns list of vehicle types available for riders (CAR, BIKE, TRUCK). Requires authentication.
+ *     tags:
+ *       - Rider
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Vehicle types retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Vehicle types retrieved successfully
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     enum: [CAR, BIKE, TRUCK]
+ *       401:
+ *         description: Unauthorized - No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+
+router.get('/vehicle-types', authenticate, authorize("DRIVER", "ADMIN"), RiderController.getVehicleTypes);
 
 export default router;

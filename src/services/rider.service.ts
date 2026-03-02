@@ -4,6 +4,12 @@ export class RiderService {
     /**
      * Get rider by id
      */
+
+    static async getVehicleTypes() {
+        const vehicleTypes = await prisma.vehicleTypes.findMany();
+        return vehicleTypes;
+    }
+
     static async getRiderById(riderId: string) {
         const rider = await prisma.rider.findUnique({ where: { id: riderId } });
         if (!rider) {
