@@ -302,3 +302,8 @@ model contactUs {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model vehicleTypes {
+  id   String      @id @default(uuid())
+  type vehicleType @unique
+}
