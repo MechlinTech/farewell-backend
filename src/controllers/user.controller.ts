@@ -66,7 +66,52 @@ export class ContactController {
       });
     }
   }
+  static async getContactsByUserIdAdmin(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const userId = req.params.userId as string;
 
+      if (!userId) {
+        res.status(400).json({
+          success: false,
+          message: "User ID is required",
+        });
+        return;
+      }
+
+      // Pagination params
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      if (page < 1 || limit < 1 || limit > 100) {
+        res.status(400).json({
+          success: false,
+          message:
+            "Invalid pagination parameters. Page must be >= 1 and limit between 1 and 100",
+        });
+        return;
+      }
+
+      const result = await ContactService.getContactsByUserIdAdmin(userId, {
+        page,
+        limit,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "User contact messages retrieved successfully",
+        data: result.contacts,
+        pagination: result.pagination,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message || "Failed to fetch user contacts",
+      });
+    }
+  }
   /**
    * Get contact by ID
    */

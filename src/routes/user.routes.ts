@@ -391,4 +391,89 @@ router.get("/categories", authenticate, ContactController.getProblemCategories);
  */
 router.get("/allmessages", authenticate, authorize("ADMIN"), ContactController.getAllContacts);
 
+
+/**
+ * @swagger
+ * /contact/getmessagesbyuseridadmin/{userId}:
+ *   get:
+ *     summary: Get all contact messages of a specific user (Admin only)
+ *     description: Retrieves all contact messages for a specific user. Admin access only.
+ *     tags: [Contact]  # Make it consistent
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user whose contact messages need to be fetched
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number (must be >= 1)
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of records per page (1 - 100)
+ *     responses:
+ *       200:
+ *         description: User contact messages retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User contact messages retrieved successfully
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Contact'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     totalPages:
+ *                       type: integer
+ *                       example: 3
+ *                     totalCount:
+ *                       type: integer
+ *                       example: 25
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *                     hasNextPage:
+ *                       type: boolean
+ *                       example: true
+ *                     hasPrevPage:
+ *                       type: boolean
+ *                       example: false
+ *       400:
+ *         description: Invalid parameters
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       500:
+ *         description: Internal server error
+ */
+
+router.get("/getmessagesbyuseridadmin/:userId", authenticate, authorize("ADMIN"), ContactController.getContactsByUserIdAdmin);
+
 export default router;

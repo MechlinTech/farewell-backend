@@ -82,6 +82,44 @@ export class ContactService {
       throw new Error("Failed to fetch problem categories");
     }
   }
+  static async getContactsByUserIdAdmin(
+    userId: string,
+    { page = 1, limit = 10 }: PaginationParams
+  ) {
+    const skip = (page - 1) * limit;
+
+    // Count total messages for this user
+    const totalCount = await prisma.contactUs.count({
+      where: { userId },
+    });
+
+    // Fetch paginated messages
+    const contacts = await prisma.contactUs.findMany({
+      where: { userId },
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // Pagination metadata
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasNextPage = page < totalPages;
+    const hasPrevPage = page > 1;
+
+    return {
+      contacts,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalCount,
+        limit,
+        hasNextPage,
+        hasPrevPage,
+      },
+    };
+  }
 
   static async getAllContacts({ page = 1, limit = 10 }: PaginationParams) {
     // Calculate pagination
